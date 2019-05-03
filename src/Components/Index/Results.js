@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import {Card, Button} from "react-bootstrap";
+import {Card, Button, Badge} from "react-bootstrap";
 import axios from "axios";
 import {Link} from "react-router-dom";
 export class Results extends Component {
@@ -71,7 +71,8 @@ export class Results extends Component {
           view=result.map((obj,i)=>{
               return <Card key={i} className="ma3">
               <Card.Body>
-              <Link to={`/display/${21}/${"sidharth"}`}>{obj}</Link>
+              <Link to={`/display/${1}/${obj[0]}/${this.props.match.params.query}`}>{obj[0]}</Link>
+              <Badge variant="success" className="ml4">Occurence : {obj[1]}</Badge>
               </Card.Body>
               </Card>
           })
@@ -81,7 +82,7 @@ export class Results extends Component {
       <div>
       <form onSubmit={this.onSubmitHandler.bind(this)}>
       <div className="form-group ma3 pa4">
-      <input list="search" onChange={this.onChangeHandler.bind(this)} value={this.state.search} name="search"/>
+      <input list="search" className="form-control" onChange={this.onChangeHandler.bind(this)} value={this.state.search} name="search"/>
       <datalist id="search" >
       {show}
     </datalist>     

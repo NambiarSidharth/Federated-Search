@@ -25,14 +25,14 @@ class Display extends Component {
         view=<p>Loading ...</p>
     }else{
         view=<div><Card className="pa3">
-       { data.title}
+       { data['name']}
         </Card>
         <Card className="mv3">
         <Card.Header>
         Content
         </Card.Header>
         <Card.Body>
-        {data.text}
+        {data.data}
         </Card.Body>
         </Card>
         </div>
