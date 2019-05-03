@@ -3,11 +3,18 @@ import {Card, Button} from "react-bootstrap";
 import axios from "axios";
 import {Link} from "react-router-dom";
 export class Results extends Component {
-    state={
+    constructor(props) {
+      super(props)
+    
+      this.state = {
         loading:false,
         result:null,
-        search:""
+        search:"",
+        suggestions:[]
+      }
+      this.suggestionsHandler=this.suggestionsHandler.bind(this)
     }
+
     componentDidMount(){
         this.setState({loading:true})
         let query=this.props.match.params.query
@@ -23,9 +30,23 @@ export class Results extends Component {
    
     onChangeHandler(e){
         this.setState({[e.target.name]:e.target.value})
+        setTimeout(()=>{
+            this.suggestionsHandler(this.state.search)
+          },1000);
     }
+    suggestionsHandler(query){
+        console.log(query)
+        axios.get("http://127.0.0.1:5000/suggest/"+query)
+            .then(obj=>{
+              console.log(typeof obj.data)
+              this.setState({suggestions:obj.data})
+            }).catch(err=>{
+              this.setState({suggestions:[]})
+            })
+      }
     onSubmitHandler(e){
         e.preventDefault()
+        this.setState({loading:true})
         axios.post("http://127.0.0.1:5000/search",{query:this.state.search})
             .then(obj=>{
                 this.setState({result:obj.data,loading:false})            
@@ -37,6 +58,13 @@ export class Results extends Component {
   render() {
       const {loading,result} = this.state;
       let view;
+      const {suggestions} = this.state;
+    let show
+    console.log(suggestions)
+    
+    show=suggestions.slice(0,7).map((obj,i)=>{
+      return <option key={i} value={obj}/>
+    });
       if(loading || result===null){
           view=<p>Loading ...</p>
       }else{
@@ -53,8 +81,11 @@ export class Results extends Component {
       <div>
       <form onSubmit={this.onSubmitHandler.bind(this)}>
       <div className="form-group ma3 pa4">
-      <input className="text" name="search" className="form-control" value={this.state.search} onChange={this.onChangeHandler.bind(this)}/>
-      </div>
+      <input list="search" onChange={this.onChangeHandler.bind(this)} value={this.state.search} name="search"/>
+      <datalist id="search" >
+      {show}
+    </datalist>     
+     </div>
       <Button type="submit">Search</Button>
       </form>
       <div className="mv3">
