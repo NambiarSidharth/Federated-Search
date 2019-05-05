@@ -32,13 +32,14 @@ class Display extends Component {
         Content
         </Card.Header>
         <Card.Body>
-        {data.data}
+        <p>{data.text}
+        </p>
         </Card.Body>
         </Card>
         </div>
     }
     return (
-      <div> {view} </div>
+      <div className="container"> {view} </div>
     );
   }
 }

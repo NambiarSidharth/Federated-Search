@@ -69,11 +69,16 @@ export class Results extends Component {
           view=<p>Loading ...</p>
       }else{
           view=result.map((obj,i)=>{
+              let db=obj[0].split("_")[0]
+              let name=obj[0].split("_")[1]
               return <Card key={i} className="ma3">
               <Card.Body>
-              <Link to={`/display/${1}/${obj[0]}/${this.props.match.params.query}`}>{obj[0]}</Link>
-              <Badge variant="success" className="ml4">Occurence : {obj[1]}</Badge>
-              </Card.Body>
+              <Link to={`/display/${db}/${name}/${this.props.match.params.query}`}>{obj[0]}</Link>
+              {Object.keys(obj[1]).map(word=>{
+                  return <Badge variant="success" className="ml4">{word} : {obj[1][word]}</Badge>
+
+              })
+              }</Card.Body>
               </Card>
           })
       }

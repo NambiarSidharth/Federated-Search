@@ -8,6 +8,7 @@ export class Search extends Component {
     
       this.state = {
          search:"",
+         word:"",
          suggestions:[]
       }
       this.onChangeHandler=this.onChangeHandler.bind(this)
@@ -16,8 +17,10 @@ export class Search extends Component {
     }
     onChangeHandler(e){
         this.setState({[e.target.name]:e.target.value})
+
         setTimeout(()=>{
-          this.suggestionsHandler(this.state.search)
+          let temp=this.state.search.split(" ")
+          this.suggestionsHandler(temp[temp.length-1])
         },1000);
         
     }
