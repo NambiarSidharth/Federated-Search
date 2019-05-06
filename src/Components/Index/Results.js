@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import {Card, Button, Badge} from "react-bootstrap";
 import axios from "axios";
 import {Link} from "react-router-dom";
+import {withRouter} from "react-router-dom";
 export class Results extends Component {
     constructor(props) {
       super(props)
@@ -49,7 +50,8 @@ export class Results extends Component {
         this.setState({loading:true})
         axios.post("http://127.0.0.1:5000/search",{query:this.state.search})
             .then(obj=>{
-                this.setState({result:obj.data,loading:false})            
+                this.setState({result:obj.data,loading:false})  
+                this.props.history.push(`/${this.state.search}/results`)          
             })
             .catch(err=>{
                 console.log(err)
@@ -73,12 +75,20 @@ export class Results extends Component {
               let name=obj[0].split("_")[1]
               return <Card key={i} className="ma3">
               <Card.Body>
-              <Link to={`/display/${db}/${name}/${this.props.match.params.query}`}>{obj[0]}</Link>
+              <div className="row">
+              <Link to={`/display/${db}/${name}/${this.props.match.params.query}`} className="f4">{obj[2]}</Link>
+              </div>
+              <div className="row">
+              <Link to={`/display/${db}/${name}/${this.props.match.params.query}`} className="gray hover-gray dim">{obj[0]}</Link>
+              </div>
+              <div className="row">
               {Object.keys(obj[1]).map(word=>{
                   return <Badge variant="success" className="ml4">{word} : {obj[1][word]}</Badge>
 
               })
-              }</Card.Body>
+            }
+              </div>
+              </Card.Body>
               </Card>
           })
       }
@@ -104,4 +114,4 @@ export class Results extends Component {
   }
 }
 
-export default Results
+export default withRouter(Results);
