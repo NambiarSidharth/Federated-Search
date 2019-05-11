@@ -11,6 +11,7 @@ export class Results extends Component {
         loading:false,
         result:null,
         search:"",
+        time:null,
         suggestions:[]
       }
       this.suggestionsHandler=this.suggestionsHandler.bind(this)
@@ -22,7 +23,7 @@ export class Results extends Component {
         console.log(query)
         axios.post("http://127.0.0.1:5000/search",{query:query})
             .then(obj=>{
-               this.setState({result:obj.data,loading:false})
+               this.setState({result:obj.data.result,loading:false,time:obj.data.time})
             })
             .catch(err=>{
                 console.log(err)
@@ -50,7 +51,8 @@ export class Results extends Component {
         this.setState({loading:true})
         axios.post("http://127.0.0.1:5000/search",{query:this.state.search})
             .then(obj=>{
-                this.setState({result:obj.data,loading:false})  
+                console.log(obj.data)
+                this.setState({result:obj.data.result,loading:false,time:obj.data.time})  
                 this.props.history.push(`/${this.state.search}/results`)          
             })
             .catch(err=>{
@@ -58,7 +60,7 @@ export class Results extends Component {
             })
     }
   render() {
-      const {loading,result} = this.state;
+      const {loading,result,time} = this.state;
       let view;
       const {suggestions} = this.state;
     let show
@@ -105,6 +107,9 @@ export class Results extends Component {
       <Button type="submit">Search</Button>
       </form>
       <div className="mv3">
+      
+      <h6>Searched results in {time} seconds</h6>
+      
       <h4>Results</h4>
       </div>
       </div>
